@@ -3,10 +3,9 @@ package com.lyx.codegen.dto;
 import com.google.auto.service.AutoService;
 import com.lyx.codegen.processor.BaseCodeGenProcessor;
 import com.lyx.codegen.spi.CodeGenProcessor;
-import com.squareup.javapoet.MethodSpec;
-import com.squareup.javapoet.TypeName;
-import com.squareup.javapoet.TypeSpec;
+import com.squareup.javapoet.*;
 import com.squareup.javapoet.TypeSpec.Builder;
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -28,18 +27,18 @@ public class DtoCodeGenProcessor extends BaseCodeGenProcessor {
 
   @Override
   public Class<? extends Annotation> getAnnotation() {
-    return GenVo.class;
+    return GenDto.class;
   }
 
   @Override
   public String generatePackage(TypeElement typeElement) {
-    return typeElement.getAnnotation(GenVo.class).pkgName();
+    return typeElement.getAnnotation(GenDto.class).pkgName();
   }
 
   @Override
   protected void generateClass(TypeElement typeElement, RoundEnvironment roundEnvironment) {
     // 遍历获得所有字段
-    Set<VariableElement> fields = findFields(typeElement, ve -> Objects.isNull(ve.getAnnotation(IgnoreVo.class)));
+    Set<VariableElement> fields = findFields(typeElement, ve -> Objects.isNull(ve.getAnnotation(IgnoreDto.class)));
     // 类名
     String className = typeElement.getSimpleName() + SUFFIX;
     // 资源名
@@ -52,21 +51,18 @@ public class DtoCodeGenProcessor extends BaseCodeGenProcessor {
         // 添加注解
         .addAnnotation(Schema.class)
         .addAnnotation(Data.class);
-    addSetterAndGetterMethod(builder, fields);
-    MethodSpec.Builder constructorSpecBuilder = MethodSpec.constructorBuilder()
-        .addParameter(TypeName.get(typeElement.asType()), "source")
-        .addModifiers(Modifier.PUBLIC);
-    constructorSpecBuilder.addStatement("super(source)");
-    fields.stream().forEach(f -> {
-      constructorSpecBuilder.addStatement("this.set$L(source.get$L())", getFieldDefaultName(f),
-          getFieldDefaultName(f));
-    });
-    builder.addMethod(MethodSpec.constructorBuilder()
-        .addModifiers(Modifier.PROTECTED)
-        .build());
-    builder.addMethod(constructorSpecBuilder.build());
+    // 生产getter、setter方法
+//    addSetterAndGetterMethod(builder, fields);
+    for (VariableElement field : fields) {
+      builder.addField(FieldSpec
+              .builder(TypeName.get(field.asType()) , String.valueOf(field.getSimpleName()), Modifier.PRIVATE)
+              .addAnnotation(AnnotationSpec.builder(Schema.class)
+                      .addMember("title", "$S", getFieldDesc(field))
+                      .build())
+              .build());
+
+    }
     String packageName = generatePackage(typeElement);
-    genJavaFile(packageName, builder);
-    genJavaFile(packageName, getSourceTypeWithConstruct(typeElement,sourceClassName, packageName, className));
+    genJavaSourceFile(packageName,typeElement.getAnnotation(GenDto.class).sourcePath(),builder);
   }
 }

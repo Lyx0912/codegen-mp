@@ -4,6 +4,6 @@ package com.lyx.codegen.dto;
  * @Author: Gim
  * @Description:
  */
-public @interface IgnoreVo {
+public @interface IgnoreDto {
 
 }

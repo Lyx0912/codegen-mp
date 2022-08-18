@@ -9,7 +9,7 @@ import java.lang.annotation.*;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface GenVo {
+public @interface GenDto {
 
     String pkgName();
 
