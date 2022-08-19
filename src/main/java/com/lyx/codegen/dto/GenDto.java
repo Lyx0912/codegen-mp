@@ -15,7 +15,4 @@ public @interface GenDto {
 
     String sourcePath() default "src/main/java";
 
-    boolean overrideSource() default false;
-
-    boolean jpa() default true;
 }
