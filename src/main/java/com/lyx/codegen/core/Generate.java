@@ -1,5 +1,7 @@
 package com.lyx.codegen.core;
 
+import com.lyx.codegen.builder.BuilderChain;
+import com.lyx.codegen.builder.EntityBuilder;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.apache.ibatis.session.SqlSession;
@@ -41,8 +43,20 @@ public class Generate {
     private List<String> table;
     /** 表前缀 */
     private String tablePrefix;
+     /**
+       * 包路径(entity,controller,service包的父包)
+       */
+    private String pkgRootPath;
+     /**
+       * 资源路径
+       */
+    private String sourcePath;
 
-    public Generate(DataSource dataSource) {
+    private BuilderChain chain;
+
+    public Generate(DataSource dataSource,String pkgRootPath,String sourcePath) {
+        this.pkgRootPath = pkgRootPath;
+        this.sourcePath = sourcePath;
         jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
@@ -54,21 +68,32 @@ public class Generate {
         table = jdbcTemplate.queryForList(SHOWTABLES,String.class);
         // 处理表名
         table = table.stream().map(item -> {
-            // 替换前缀
-            if (!StringUtils.isEmpty(tablePrefix)) {
-                item = item.replaceFirst(tablePrefix,"");
-            }
-            // 首字母大写
-            // 驼峰命名
-            String[] hump = item.split("_");
-            StringBuilder builder = new StringBuilder();
-            for (String s : hump) {
-                builder.append(s.substring(0,1).toUpperCase()+s.substring(1));
-            }
-            return builder.toString();
+            String entityName = buildEntityName(item);
+            // 从新建实体类开始
+            chain = new EntityBuilder(jdbcTemplate,entityName,item,pkgRootPath,sourcePath);
+            System.out.println(item);
+            chain.build();
+            return entityName;
         }).collect(Collectors.toList());
+    }
 
-        System.out.println(table);
+     /**
+       * 构建实体类名称
+       */
+    private String buildEntityName(String name) {
+        // 替换前缀
+        if (!StringUtils.isEmpty(tablePrefix)) {
+            name = name.replaceFirst(tablePrefix,"");
+        }
+        // 首字母大写
+        // 驼峰命名
+        String[] hump = name.split("_");
+        StringBuilder builder = new StringBuilder();
+        for (String s : hump) {
+            builder.append(s.substring(0,1).toUpperCase()+s.substring(1));
+        }
+
+        return builder.toString();
     }
 
 }
