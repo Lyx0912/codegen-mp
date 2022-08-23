@@ -1,7 +1,9 @@
 package com.lyx.codegen.core;
 
 import com.lyx.codegen.builder.BuilderChain;
+import com.lyx.codegen.builder.DaoBuilder;
 import com.lyx.codegen.builder.EntityBuilder;
+import com.lyx.codegen.builder.ServiceBuilder;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.apache.ibatis.session.SqlSession;
@@ -70,14 +72,23 @@ public class Generate {
         table = table.stream().map(item -> {
             String entityName = buildEntityName(item);
             // 从新建实体类开始
-            chain = new EntityBuilder(jdbcTemplate,entityName,item,pkgRootPath,sourcePath);
-            System.out.println(item);
-            chain.build();
+            chain = createChain(jdbcTemplate,entityName,item,pkgRootPath,sourcePath);
+            chain.build(jdbcTemplate, entityName, item, pkgRootPath, sourcePath);
             return entityName;
         }).collect(Collectors.toList());
     }
 
      /**
+       * 创建生成类的调用链 实体类-dao-service-controller
+       */
+    private BuilderChain createChain(JdbcTemplate jdbcTemplate, String entityName, String item, String pkgRootPath, String sourcePath) {
+        EntityBuilder chain = new EntityBuilder();
+        chain.appendNext(new DaoBuilder())
+                .appendNext(new ServiceBuilder());
+        return chain;
+    }
+
+    /**
        * 构建实体类名称
        */
     private String buildEntityName(String name) {

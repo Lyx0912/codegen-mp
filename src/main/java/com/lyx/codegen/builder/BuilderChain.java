@@ -21,34 +21,6 @@ public abstract class BuilderChain {
        * 调用链的下一个构建者
        */
     protected BuilderChain next;
-     /**
-       * jdbcTemplate
-       */
-    protected JdbcTemplate jdbcTemplate;
-     /**
-       * 实体名
-       */
-    protected String entityName;
-     /**
-       * 表名
-       */
-    protected String tableName;
-     /**
-       * 包路径
-       */
-    protected String packagePath;
-     /**
-       * 资源路径
-       */
-    protected String sourcePath;
-
-    public BuilderChain(JdbcTemplate jdbcTemplate, String entityName, String tableName,String packagePath,String sourcePath) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.entityName = entityName;
-        this.tableName = tableName;
-        this.packagePath = packagePath;
-        this.sourcePath = sourcePath;
-    }
 
     public BuilderChain appendNext(BuilderChain next){
         this.next = next;
@@ -80,6 +52,10 @@ public abstract class BuilderChain {
         }
     }
 
-    public abstract void build();
+    public void createMapperFile(){
+        // todo 生成mapper文件
+    }
+
+    public abstract void build(JdbcTemplate jdbcTemplate, String entityName, String item, String pkgRootPath, String sourcePath);
 
 }
