@@ -1,9 +1,6 @@
 package com.lyx.codegen.core;
 
-import com.lyx.codegen.builder.BuilderChain;
-import com.lyx.codegen.builder.DaoBuilder;
-import com.lyx.codegen.builder.EntityBuilder;
-import com.lyx.codegen.builder.ServiceBuilder;
+import com.lyx.codegen.builder.*;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.apache.ibatis.session.SqlSession;
@@ -84,7 +81,8 @@ public class Generate {
     private BuilderChain createChain(JdbcTemplate jdbcTemplate, String entityName, String item, String pkgRootPath, String sourcePath) {
         EntityBuilder chain = new EntityBuilder();
         chain.appendNext(new DaoBuilder())
-                .appendNext(new ServiceBuilder());
+                .appendNext(new ServiceBuilder())
+                .appendNext(new ControllerBuilder());
         return chain;
     }
 

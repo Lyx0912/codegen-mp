@@ -41,7 +41,8 @@ public class DaoBuilder extends BuilderChain{
                 .addJavadoc(entityName+"\n@author 黎勇炫 \n@Date "+ LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
 
         genJavaSourceFile(pkgRootPath+DAO_PKG_SUFFIX,sourcePath,builder);
-
+        // 生成mapper文件
+        createMapperFile(pkgRootPath+DAO_PKG_SUFFIX+"."+entityName,entityName+"Dao");
         this.next.build(jdbcTemplate,entityName,tableName,pkgRootPath,sourcePath);
     }
 }
