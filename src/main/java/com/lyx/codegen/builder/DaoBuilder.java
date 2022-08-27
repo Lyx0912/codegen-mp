@@ -43,6 +43,8 @@ public class DaoBuilder extends BuilderChain{
         genJavaSourceFile(pkgRootPath+DAO_PKG_SUFFIX,sourcePath,builder);
         // 生成mapper文件
         createMapperFile(pkgRootPath+DAO_PKG_SUFFIX+"."+entityName,entityName+"Dao");
-        this.next.build(jdbcTemplate,entityName,tableName,pkgRootPath,sourcePath);
+        if(null != this.next){
+            this.next.build(jdbcTemplate,entityName,tableName,pkgRootPath,sourcePath);
+        }
     }
 }
