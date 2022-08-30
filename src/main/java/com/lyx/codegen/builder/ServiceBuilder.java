@@ -2,9 +2,6 @@ package com.lyx.codegen.builder;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.lyx.codegen.mapper.DaoCodeGenProcessor;
-import com.lyx.codegen.mapper.GenDao;
-import com.lyx.codegen.service.GenService;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeSpec;
