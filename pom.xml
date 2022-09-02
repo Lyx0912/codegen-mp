@@ -19,11 +19,6 @@
             <artifactId>dom4j</artifactId>
             <version>1.6.1</version>
         </dependency>
-        <dependency>
-            <groupId>com.google.auto.service</groupId>
-            <artifactId>auto-service</artifactId>
-            <version>1.0-rc6</version>
-        </dependency>
         <!-- https://mvnrepository.com/artifact/com.squareup/javapoet -->
         <dependency>
             <groupId>com.squareup</groupId>

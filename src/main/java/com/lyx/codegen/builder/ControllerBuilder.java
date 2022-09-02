@@ -15,7 +15,6 @@ import java.util.Map;
  * @author 黎勇炫
  * @date 2022年08月24日 13:51
  */
-@RequestMapping
 public class ControllerBuilder extends BuilderChain{
 
     public static final String CONTROLLER_SUFFIX = "Controller";
@@ -44,47 +43,7 @@ public class ControllerBuilder extends BuilderChain{
                 .addModifiers(Modifier.PRIVATE)
                 .addAnnotation(AnnotationSpec.builder(Autowired.class).build())
                 .build());
-//        // 查询接口
-//        builder.addMethod(
-//                MethodSpec.methodBuilder("query")
-//                        .addAnnotation(AnnotationSpec.builder(RequestMapping.class)
-//                                        .addMember("value","\"/query\"")
-//                                        .build()
-//                        )
-//                        .addModifiers(Modifier.PUBLIC)
-//                        .returns(Map.class)
-//                        .addCode("\nList<"+entityName+"> list = "+entityName.substring(0,1).toLowerCase()+entityName.substring(1)+ServiceBuilder.SERVICE_SUFFIX+".list();\nreturn\tnew HashMap<Object,Object>();")
-//                        .build()
-//        );
-//        // 编辑接口
-//        builder.addMethod(
-//                MethodSpec.methodBuilder("query")
-//                        .addParameter(ParameterSpec.builder(ClassName.get(pkgRootPath+EntityBuilder.ENTITY_PKG_SUFFID,entityName),entityName.toLowerCase()).addAnnotation(RequestBody.class).build())
-//                        .addAnnotation(AnnotationSpec.builder(RequestMapping.class)
-//                                        .addMember("value","\"/edit\"")
-//                                        .build()
-//                        )
-//                        .addModifiers(Modifier.PUBLIC)
-//                        .returns(Map.class)
-//                        .addCode("\nList<"+entityName+"> list = "+entityName.substring(0,1).toLowerCase()+entityName.substring(1)+ServiceBuilder.SERVICE_SUFFIX+".list();\nreturn\tnew HashMap<Object,Object>();")
-//                        .build()
-//        );
-//
-//        // 删除接口
-//        builder.addMethod(
-//                MethodSpec.methodBuilder("remove")
-//                        .addParameter(ParameterSpec.builder(String[].class,"ids").addAnnotation(RequestBody.class).build())
-//                        .addAnnotation(
-//                            AnnotationSpec.builder(RequestMapping.class)
-//                                .addMember("value","\"/remove\"")
-//                                .build()
-//                        )
-//                        .addModifiers(Modifier.PUBLIC)
-//                        .returns(Map.class)
-//                        .addCode("\nList<"+entityName+"> list = "+entityName.substring(0,1).toLowerCase()+entityName.substring(1)+ServiceBuilder.SERVICE_SUFFIX+".list();\nreturn\tnew HashMap<Object,Object>();")
-//                        .build());
-        // 添加接口
-        //        builder.addMethod();
+
         genJavaSourceFile(pkgRootPath+CONTROLLER_OKG_SUFFIX,sourcePath,builder);
     }
 }

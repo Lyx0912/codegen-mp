@@ -21,6 +21,7 @@ public class FieldRel {
         rel.put("int",TypeName.get(int.class));
         rel.put("String",TypeName.get(String.class));
         rel.put("Date", TypeName.get(Date.class));
+        rel.put("bigint",TypeName.get(long.class));
     }
 
      /**
@@ -29,6 +30,12 @@ public class FieldRel {
     public static Object getJavaType(String type){
         if(type.startsWith("varchar")){
             return rel.get("String");
+        }
+        if(type.startsWith("bigint")){
+            return rel.get("bigint");
+        }
+        if(type.startsWith("int")){
+            return rel.get("int");
         }
         return rel.get(type);
     }

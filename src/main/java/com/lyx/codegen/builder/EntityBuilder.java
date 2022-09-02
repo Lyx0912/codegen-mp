@@ -50,6 +50,7 @@ public class EntityBuilder extends BuilderChain{
                 .addModifiers(Modifier.PUBLIC)
                 .addJavadoc(entityName+"\n@author 黎勇炫 \n@Date "+ LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         for (Columns column : columns) {
+            System.out.println(column);
             FieldSpec.Builder fieldBuilder = FieldSpec.builder((TypeName) FieldRel.getJavaType(column.getType()), buildFieldName(column.getField()), Modifier.PRIVATE)
                     .addAnnotation(AnnotationSpec.builder(Schema.class).addMember("title", "\""+column.getComment()+"\"").build());
             // 如果是主键就加上@TableId
